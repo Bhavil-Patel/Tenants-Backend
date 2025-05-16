@@ -5,7 +5,7 @@ const registerSchema = new mongoose.Schema({
     contact: String,
     userName: String,
     password: String,
-})
+}, { versionKey: false })
 
 const schema = mongoose.model('users', registerSchema)
 
