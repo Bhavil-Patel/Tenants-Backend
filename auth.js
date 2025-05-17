@@ -6,6 +6,10 @@ const userSchema = require('./models/authSchema');
 
 const register = async (req, res) => {
     const { userName, contact, password } = req.body;
+
+    console.log(userName, contact, password)
+    console.log(req.body)
+
     if (!userName || !contact || !password) {
         return res.status(400).json({ message: "All fields are required" });
     }
@@ -22,7 +26,7 @@ const register = async (req, res) => {
         });
         const newUser = await user.save();
         const token = jwt.sign(
-            { _id: newUser._id, userName: newUser.userName },process.env.JWT_SECRET);
+            { _id: newUser._id, userName: newUser.userName }, process.env.JWT_SECRET);
         res.status(200).json({
             message: "Registered successfully",
             token,
@@ -40,6 +44,8 @@ const register = async (req, res) => {
 
 const logIn = async (req, res) => {
     const { contact, password } = req.body;
+    console.log(contact, password)
+    console.log(req.body)
     if (!contact || !password) {
         return res.status(400).json({ message: "Contact and password are required" });
     }
