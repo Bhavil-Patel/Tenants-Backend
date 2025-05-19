@@ -2,14 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-const userSchema = require('./models/authSchema');
+const userSchema = require('../models/authSchema');
+const upload = require('../middlewares/multer')
 
 const register = async (req, res) => {
     const { userName, contact, password } = req.body;
-
-    console.log(userName, contact, password)
-    console.log(req.body)
-
+    const identification = req.files?.identification?.[0];
+    const rentalHistory = req.files?.rentalHistory?.[0];
     if (!userName || !contact || !password) {
         return res.status(400).json({ message: "All fields are required" });
     }
@@ -23,6 +22,8 @@ const register = async (req, res) => {
             userName,
             contact,
             password,
+            identification: `http://localhost:5000/assets/images/${identification.filename}`,
+            rentalHistory: `http://localhost:5000/assets/images/${rentalHistory.filename}`,
         });
         const newUser = await user.save();
         const token = jwt.sign(
@@ -44,8 +45,6 @@ const register = async (req, res) => {
 
 const logIn = async (req, res) => {
     const { contact, password } = req.body;
-    console.log(contact, password)
-    console.log(req.body)
     if (!contact || !password) {
         return res.status(400).json({ message: "Contact and password are required" });
     }
@@ -73,7 +72,7 @@ const logIn = async (req, res) => {
     }
 };
 
-router.post("/signIn", register);
+router.post("/signIn", upload.fields([{ name: "identification", maxCount: 1 }, { name: "rentalHistory", maxCount: 1 },]), register);
 router.post("/logIn", logIn);
 
 module.exports = router;
