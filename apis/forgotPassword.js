@@ -1,18 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const userSchema = require('../models/authSchema');
+const userSchema = require('../models/userSchema');
 
 const resetPassword = async (req, res) => {
     const { contact, password } = req.body;
     console.log("contact", contact)
     console.log("password", password)
     try {
-        const findUser = await userSchema.findOne({ contact });
+        const findUser = await userSchema.findOne({
+            $or: [
+                { contact: isNaN(parseInt(contact)) ? 0 : parseInt(contact) },
+                { eMail: contact },
+            ]
+        });
         if (!findUser) {
             return res.status(404).json({ message: 'User with this contact not found.' });
         }
         const updateResult = await userSchema.updateOne(
-            { contact },
+            { _id: findUser._id },
             { $set: { password } }
         );
         if (updateResult.modifiedCount === 0) {

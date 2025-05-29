@@ -18,4 +18,17 @@ const sendOtpEmail = async (to, otp) => {
     });
 };
 
-module.exports = sendOtpEmail;
+const scheduleVisitsEmail = async (subject, to, content, contentHTMl) => {
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to,
+        subject: subject,
+        text: content,
+    };
+    if (contentHTMl) {
+        mailOptions.html = contentHTMl;
+    }
+    return await transporter.sendMail(mailOptions);
+};
+
+module.exports = { sendOtpEmail, scheduleVisitsEmail };

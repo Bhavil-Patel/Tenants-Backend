@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const twilio = require('twilio');
-const sendOtpEmail = require('../middlewares/mailer');
+const { sendOtpEmail } = require('../middlewares/mailer');
 const otpStore = require('../utils/otpStore')
 
 const otpSend = async (req, res) => {
@@ -14,16 +14,15 @@ const otpSend = async (req, res) => {
     });
 
     const { contact } = req.body;
+    
+    const contactStr = String(contact).trim();
+    const isEmail = contactStr.includes('.com');
+    const email = isEmail ? contactStr : null;
+    const number = !isEmail ? contactStr : null;
+    const formattedNumber = number ? (number.startsWith('+') ? number : `+${number}`) : null;
 
-    const isEmail = contact.includes('.com');
-    const email = isEmail ? contact : null;
-    const formattedNumber = !isEmail ? `+91${contact}` : null;
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = Date.now() + 5 * 60 * 1000;
-
-    if (isEmail && email in otpStore) {
-        delete otpStore[email];
-    }
 
     if (isEmail) {
         otpStore[email] = { otp, expiresAt };

@@ -20,9 +20,11 @@ const otpVerify = async (req, res) => {
             return res.status(400).json({ message: 'Email or phone number and OTP are required' });
         }
 
-        const isEmail = contact.includes('.com');
-        const email = isEmail ? contact : null;
-        const formattedNumber = !isEmail ? `+91${contact}` : null;
+        const contactStr = String(contact).trim();
+        const isEmail = contactStr.includes('.com');
+        const email = isEmail ? contactStr : null;
+        const number = !isEmail ? contactStr : null;
+        const formattedNumber = number ? (number.startsWith('+') ? number : `+${number}`) : null;
 
         if (isEmail) {
             const stored = otpStore[email];

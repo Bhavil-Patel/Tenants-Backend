@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 const listingSchema = new mongoose.Schema({
-    id: mongoose.Types.ObjectId,
     ownerDetails: { name: String, contact: String },
     images: [String],
     title: String,
@@ -14,6 +13,7 @@ const listingSchema = new mongoose.Schema({
     bookedTill: Date,
     maxMembers: Number,
     rating: Number,
+    propertyRules: Array,
     coordinates: [Number], // [longitude, latitude]
 }, { versionKey: false })
 

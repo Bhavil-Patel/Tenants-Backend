@@ -1,10 +1,15 @@
 const mongoose = require('mongoose')
 
 const registerSchema = new mongoose.Schema({
-    _id: mongoose.Types.ObjectId,
-    contact: String,
     userName: String,
+    contact: Number,
+    eMail: String,
     password: String,
+    livingPreference: String,
+    pet: [String],
+    drinking: Boolean,
+    smoking: Boolean,
+    foodPreference: String,
     identification: String,
     rentalHistory: String
 }, { versionKey: false })
