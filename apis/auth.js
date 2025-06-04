@@ -4,9 +4,11 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const userSchema = require('../models/userSchema');
 const upload = require('../middlewares/multer')
+const BASE_URL = process.env.BASE_URL;
+
 
 const register = async (req, res) => {
-    const { userName, email, contact, password } = req.body;
+    const { userName, email, contact, password, role } = req.body;
 
     const identification = req.files?.identification?.[0];
     const rentalHistory = req.files?.rentalHistory?.[0];
@@ -22,10 +24,11 @@ const register = async (req, res) => {
             _id: new mongoose.Types.ObjectId(),
             userName,
             contact,
-            eMail: email,
+            email,
             password,
-            identification: `http://192.168.1.8:5000/assets/images/${identification.filename}`,
-            rentalHistory: `http://192.168.1.8:5000/assets/images/${rentalHistory.filename}`,
+            role,
+            identification: `http://192.168.1.7:4000/assets/images/${identification.filename}`,
+            rentalHistory: `http://192.168.1.7:4000/assets/images/${rentalHistory.filename}`,
         });
         const newUser = await user.save();
         const token = jwt.sign(
@@ -36,7 +39,10 @@ const register = async (req, res) => {
             user: {
                 _id: newUser._id,
                 userName: newUser.userName,
-                contact: newUser.contact
+                contact: newUser.contact,
+                email: newUser.email,
+                role: newUser.role,
+
             }
         });
     } catch (error) {
@@ -54,7 +60,7 @@ const logIn = async (req, res) => {
         const findUser = await userSchema.findOne({
             $or: [
                 { contact: isNaN(parseInt(contact)) ? 0 : parseInt(contact) },
-                { eMail: contact },
+                { email: contact },
             ]
         });
         if (!findUser) {
@@ -67,13 +73,15 @@ const logIn = async (req, res) => {
             { _id: findUser._id, userName: findUser.userName },
             process.env.JWT_SECRET
         );
-        
+
         return res.status(200).json({
             message: 'Login successful',
             user: {
                 _id: findUser._id,
                 userName: findUser.userName,
-                contact: findUser.contact
+                contact: findUser.contact,
+                email: findUser.email,
+                role: findUser.role
             },
             token
         });

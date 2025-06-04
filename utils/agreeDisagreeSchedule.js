@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const BASE_URL = process.env.BASE_URL || 'http://192.168.1.8:4000/api';
+const BASE_URL = process.env.BASE_URL;
 const schema = require('../models/visitSchema');
 const { scheduleVisitsEmail } = require('../middlewares/mailer');
 
@@ -68,7 +68,7 @@ const handleDisagreePost = async (req, res) => {
 
         if (!email || !id || !reason) {
             return res.send('<h3>Missing required fields.</h3>');
-        }
+        }   
 
         const visitRecord = await schema.findById(id);
 
@@ -108,7 +108,7 @@ const handleDisagreePost = async (req, res) => {
     }
 };
 
-router.get('/agreeDisagreeForm', agreeDisagreeForm);
-router.post('/agreeDisagreeForm', handleDisagreePost);
+router.get('/visit', agreeDisagreeForm);
+router.post('/visit', handleDisagreePost);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const express = require('express');
 const { scheduleVisitsEmail } = require('../middlewares/mailer');
 const router = express.Router();
-const BASE_URL = process.env.BASE_URL || 'http://192.168.1.8:4000/api';
+const BASE_URL = process.env.BASE_URL;
 const schema = require('../models/visitSchema');
 
 const validateScheduleVisit = (req, res, next) => {
@@ -14,7 +14,18 @@ const validateScheduleVisit = (req, res, next) => {
         visitTime,
         visitorName,
         visitorContact,
+        propertyId,
     } = req.body;
+
+    console.log("ownerName ", ownerName, "<====================================================")
+    console.log("ownerContact ", ownerContact, "<====================================================")
+    console.log("propertyTitle ", propertyTitle, "<====================================================")
+    console.log("propertyAddress ", propertyAddress, "<====================================================")
+    console.log("visitDate ", visitDate, "<====================================================")
+    console.log("visitTime ", visitTime, "<====================================================")
+    console.log("visitorName ", visitorName, "<====================================================")
+    console.log("visitorContact ", visitorContact, "<====================================================")
+    console.log("propertyId ", propertyId, "<====================================================")
 
     if (!ownerName || !ownerContact || !propertyTitle || !propertyAddress ||
         !visitDate || !visitTime || !visitorName || !visitorContact) {
@@ -46,6 +57,9 @@ const scheduleVisits = async (req, res) => {
             visitTime,
             visitorName,
             visitorContact,
+            propertyId,
+            visitorId,
+            ownerId
         } = req.body;
 
         const schedule = new schema({
@@ -57,6 +71,9 @@ const scheduleVisits = async (req, res) => {
             visitTime,
             visitorName,
             visitorContact,
+            propertyId,
+            visitorId,
+            ownerId
         });
 
         const addSchedule = await schedule.save();
@@ -76,8 +93,9 @@ You have been scheduled for a property visit:
     Client: ${visitorName} (${visitorContact})
 
 Please confirm your availability by visiting one of the following links:
-- Agree: ${BASE_URL}/agreeDisagreeForm?response=agree&id=${addSchedule._id}
-- Disagree: ${BASE_URL}/agreeDisagreeForm?response=disagree&id=${addSchedule._id}
+- Agree: ${BASE_URL}/visit?response=agree&id=${addSchedule._id}
+- Reschedule: ${BASE_URL}/rescheduleVisit?response=reschedule&id=${addSchedule._id}
+- Disagree: ${BASE_URL}/visit?response=disagree&id=${addSchedule._id}
 
 Thanks,
 The Tenants Team
@@ -99,8 +117,9 @@ The Tenants Team
     </ul>
     <p>Please confirm your availability by clicking one of the following links:</p>
     <p>
-        <a href="${BASE_URL}/agreeDisagreeForm?response=agree&id=${addSchedule._id}">Agree</a> |
-        <a href="${BASE_URL}/agreeDisagreeForm?response=disagree&id=${addSchedule._id}">Disagree</a>
+        <a href="${BASE_URL}/visit?response=agree&id=${addSchedule._id}">Agree</a> |
+        <a href="${BASE_URL}/rescheduleVisit?response=reschedule&id=${addSchedule._id}">Reschedule</a> |
+        <a href="${BASE_URL}/visit?response=disagree&id=${addSchedule._id}">Disagree</a>
     </p>
     <p>
         To confirm, click "Agree".<br>

@@ -24,7 +24,7 @@ const otpVerify = async (req, res) => {
         const isEmail = contactStr.includes('.com');
         const email = isEmail ? contactStr : null;
         const number = !isEmail ? contactStr : null;
-        const formattedNumber = number ? (number.startsWith('+') ? number : `+${number}`) : null;
+        const formattedNumber = number ? (number.startsWith('+91') ? number : `+91${number}`) : null;
 
         if (isEmail) {
             const stored = otpStore[email];

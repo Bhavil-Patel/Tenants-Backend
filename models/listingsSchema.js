@@ -1,7 +1,12 @@
 const mongoose = require('mongoose')
 
 const listingSchema = new mongoose.Schema({
-    ownerDetails: { name: String, contact: String },
+    ownerDetails: {
+        _id: mongoose.Types.ObjectId,
+        name: String,
+        contact: Number,
+        email: String,
+    },
     images: [String],
     title: String,
     location: String,
@@ -9,10 +14,9 @@ const listingSchema = new mongoose.Schema({
     rent: String,
     city: String,
     availability: [String],
-    discription: [String],
+    description: [String],
     bookedTill: Date,
     maxMembers: Number,
-    rating: Number,
     propertyRules: Array,
     coordinates: [Number], // [longitude, latitude]
 }, { versionKey: false })

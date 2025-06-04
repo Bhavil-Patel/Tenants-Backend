@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const schema = require('../models/userSchema');
+const mongoose = require('mongoose');
+const listingSchema = require('../models/listingsSchema')
+
 
 const profile = async (req, res) => {
     try {
@@ -13,9 +16,14 @@ const profile = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
+
+        const allListings = await listingSchema.find({ 'ownerDetails._id': new mongoose.Types.ObjectId(id) });
+        const propertyCount = allListings.length;
+
         return res.status(200).json({
             message: "User profile fetched successfully.",
-            user
+            user,
+            propertyCount
         });
     } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -27,14 +35,14 @@ const profile = async (req, res) => {
 };
 
 const editUser = async (req, res) => {
-    const { _id, userName, eMail, contact, password, livingPreference, pet, drinking, smoking, foodPreference } = req.body
+    const { _id, userName, email, contact, password, livingPreference, pet, drinking, smoking, foodPreference } = req.body
 
     console.log(_id)
     console.log(req.body)
 
     const userData = {
         userName,
-        eMail,
+        email,
         contact,
         password,
         livingPreference,
@@ -59,7 +67,9 @@ const editUser = async (req, res) => {
         user: {
             _id: updatedData._id,
             userName: updatedData.userName,
-            contact: updatedData.contact
+            contact: updatedData.contact,
+            email: updatedData.email,
+            role: updatedData.role
         }
     })
 }

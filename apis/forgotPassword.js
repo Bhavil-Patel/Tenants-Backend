@@ -10,7 +10,7 @@ const resetPassword = async (req, res) => {
         const findUser = await userSchema.findOne({
             $or: [
                 { contact: isNaN(parseInt(contact)) ? 0 : parseInt(contact) },
-                { eMail: contact },
+                { email: contact },
             ]
         });
         if (!findUser) {

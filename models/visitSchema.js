@@ -10,6 +10,9 @@ const VisitScheduleSchema = new mongoose.Schema({
     visitorName: String,
     visitorContact: String,
     status: String,
+    propertyId: mongoose.Types.ObjectId,
+    visitorId: mongoose.Types.ObjectId,
+    ownerId: mongoose.Types.ObjectId,
     reasonForDisagreement: String,
 }, { timestamps: true, versionKey: false });
 

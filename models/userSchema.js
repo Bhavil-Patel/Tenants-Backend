@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const registerSchema = new mongoose.Schema({
     userName: String,
     contact: Number,
-    eMail: String,
+    email: String,
     password: String,
     livingPreference: String,
     pet: [String],
@@ -11,7 +11,8 @@ const registerSchema = new mongoose.Schema({
     smoking: Boolean,
     foodPreference: String,
     identification: String,
-    rentalHistory: String
+    rentalHistory: String,
+    role: String,
 }, { versionKey: false })
 
 const schema = mongoose.model('users', registerSchema)

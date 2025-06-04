@@ -19,7 +19,7 @@ const otpSend = async (req, res) => {
     const isEmail = contactStr.includes('.com');
     const email = isEmail ? contactStr : null;
     const number = !isEmail ? contactStr : null;
-    const formattedNumber = number ? (number.startsWith('+') ? number : `+${number}`) : null;
+    const formattedNumber = number ? (number.startsWith('+91') ? number : `+91${number}`) : null;
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = Date.now() + 5 * 60 * 1000;
