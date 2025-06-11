@@ -25,7 +25,7 @@ const agreeDisagreeForm = async (req, res) => {
 
             return res.send(`
                 <h2>Sorry to hear that you can't make it.</h2>
-                <form method="POST" action="${BASE_URL}/agreeDisagreeForm">
+                <form method="POST" action="${BASE_URL}/visit">
                     <input type="hidden" name="email" value="${email}" />
                     <input type="hidden" name="id" value="${id}" />
                     <label for="reason">Please provide a reason:</label><br/>

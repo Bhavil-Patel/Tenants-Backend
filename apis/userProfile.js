@@ -8,7 +8,6 @@ const listingSchema = require('../models/listingsSchema')
 const profile = async (req, res) => {
     try {
         const { id } = req.query;
-        console.log(id)
         if (!id) {
             return res.status(400).json({ message: "User ID is required." });
         }
@@ -36,9 +35,6 @@ const profile = async (req, res) => {
 
 const editUser = async (req, res) => {
     const { _id, userName, email, contact, password, livingPreference, pet, drinking, smoking, foodPreference } = req.body
-
-    console.log(_id)
-    console.log(req.body)
 
     const userData = {
         userName,

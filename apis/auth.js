@@ -8,15 +8,16 @@ const BASE_URL = process.env.BASE_URL;
 
 
 const register = async (req, res) => {
-    const { userName, email, contact, password, role } = req.body;
+    const { userName, email, contact, password, role, dob, monthlyIncome, profession, currentAddress, } = req.body;
 
     const identification = req.files?.identification?.[0];
     const rentalHistory = req.files?.rentalHistory?.[0];
+    const QRCode = req.files?.QRCode?.[0];
     if (!userName || !contact || !password) {
         return res.status(400).json({ message: "All fields are required" });
     }
     try {
-        const existingUser = await userSchema.findOne({ contact }) || await userSchema.findOne({ email });
+        const existingUser = await userSchema.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: "User already exists with this contact" });
         }
@@ -27,8 +28,13 @@ const register = async (req, res) => {
             email,
             password,
             role,
-            identification: `http://192.168.1.7:4000/assets/images/${identification.filename}`,
-            rentalHistory: `http://192.168.1.7:4000/assets/images/${rentalHistory.filename}`,
+            dob,
+            monthlyIncome,
+            profession,
+            currentAddress,
+            identification: `${process.env.ASSETS_URL}${identification.filename}`,
+            rentalHistory: `${process.env.ASSETS_URL}${rentalHistory.filename}`,
+            QRCode: `${process.env.ASSETS_URL}${QRCode.filename}`,
         });
         const newUser = await user.save();
         const token = jwt.sign(
@@ -64,10 +70,10 @@ const logIn = async (req, res) => {
             ]
         });
         if (!findUser) {
-            return res.status(400).json({ message: 'Invalid contact or password' });
+            return res.status(400).json({ message: 'Invalid contact' });
         }
         if (findUser.password !== password) {
-            return res.status(400).json({ message: 'Invalid contact or password' });
+            return res.status(400).json({ message: 'Invalid password' });
         }
         const token = jwt.sign(
             { _id: findUser._id, userName: findUser.userName },
@@ -91,7 +97,7 @@ const logIn = async (req, res) => {
     }
 };
 
-router.post("/signUp", upload.fields([{ name: "identification", maxCount: 1 }, { name: "rentalHistory", maxCount: 1 },]), register);
+router.post("/signUp", upload.fields([{ name: "identification", maxCount: 1 }, { name: "QRCode", maxCount: 1 }, { name: "rentalHistory", maxCount: 1 },]), register);
 router.post("/logIn", logIn);
 
 module.exports = router;

@@ -4,8 +4,6 @@ const userSchema = require('../models/userSchema');
 
 const resetPassword = async (req, res) => {
     const { contact, password } = req.body;
-    console.log("contact", contact)
-    console.log("password", password)
     try {
         const findUser = await userSchema.findOne({
             $or: [
@@ -20,9 +18,6 @@ const resetPassword = async (req, res) => {
             { _id: findUser._id },
             { $set: { password } }
         );
-        if (updateResult.modifiedCount === 0) {
-            return res.status(500).json({ message: 'Password reset failed. Try again.' });
-        }
         return res.status(200).json({ message: 'Password updated successfully.' });
     } catch (error) {
         console.error('Error resetting password:', error);

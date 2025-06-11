@@ -9,7 +9,7 @@ const initializeSocket = (server) => {
     });
 
     io.on("connection", (socket) => {
-        console.log(socket.id);
+        console.log(`User Connected: ${socket.id}`);
         socket.on("disconnect", (reason) => {
             console.log(`User disconnected: ${socket.id}, Reason: ${reason}`);
         });

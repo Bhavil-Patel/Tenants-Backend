@@ -10,10 +10,15 @@ const registerSchema = new mongoose.Schema({
     drinking: Boolean,
     smoking: Boolean,
     foodPreference: String,
+    dob: Date,
+    monthlyIncome: Number,
+    profession: String,
+    currentAddress: String,
+    QRCode: String,
     identification: String,
     rentalHistory: String,
     role: String,
-}, { versionKey: false })
+}, { timestamps: true, versionKey: false })
 
 const schema = mongoose.model('users', registerSchema)
 

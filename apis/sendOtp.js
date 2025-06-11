@@ -22,12 +22,11 @@ const otpSend = async (req, res) => {
     const formattedNumber = number ? (number.startsWith('+91') ? number : `+91${number}`) : null;
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log("OTP: ", otp, "<-------------------------------------------------------------------------------------")
     const expiresAt = Date.now() + 5 * 60 * 1000;
 
     if (isEmail) {
         otpStore[email] = { otp, expiresAt };
-        console.log("new otp", otp)
-        console.log('otpStore', otpStore)
     }
 
     try {

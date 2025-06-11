@@ -6,8 +6,10 @@ const upload = require('../middlewares/multer')
 const mongoose = require('mongoose');
 
 const getListings = async (req, res) => {
+    const { id } = req.query;
     try {
-        const allListings = await listingSchema.find()
+        const listings = await listingSchema.find()
+        const allListings = listings.filter(listing => listing.ownerDetails._id.toString() !== id)
         res.status(200).json({ allListings });
     } catch (error) {
         console.error('Error getting Listings:', error);
@@ -45,6 +47,7 @@ const addListing = async (req, res) => {
         const {
             title,
             rent,
+            deposit,
             city,
             location,
             maxMembers,
@@ -54,11 +57,8 @@ const addListing = async (req, res) => {
             propertyRules,
             availability
         } = req.body;
-
+        
         const files = req.files
-
-        console.log("req.body", req.body, "<=============================================================================================");
-        console.log("req.files", req.files, "<=============================================================================================");
 
         const getUser = await userSchema.findById(userId);
         if (!getUser) {
@@ -66,7 +66,7 @@ const addListing = async (req, res) => {
         }
 
         const images = Array.isArray(files)
-            ? files.map(file => `http://192.168.1.7:4000/assets/images/${file.filename}`)
+            ? files.map(file => `${process.env.ASSETS_URL}${file.filename}`)
             : [];
 
         let formattedRules = [];
@@ -88,6 +88,7 @@ const addListing = async (req, res) => {
         const newListing = new listingSchema({
             title,
             rent,
+            deposit,
             city,
             location,
             maxMembers,
@@ -105,7 +106,6 @@ const addListing = async (req, res) => {
         });
 
         const listingDetails = await newListing.save();
-        console.log("listingDetails", listingDetails);
         return res.status(200).json({ message: 'Property added successfully!', listing: listingDetails });
 
     } catch (error) {
@@ -118,7 +118,6 @@ const addListing = async (req, res) => {
 const addAndRemoveToFavourite = async (req, res) => {
     try {
         const { user, id } = req.body;
-        console.log(req.body);
 
         if (!id || !user) {
             return res.status(400).json({ error: 'Invalid input: ID and userId are required' });

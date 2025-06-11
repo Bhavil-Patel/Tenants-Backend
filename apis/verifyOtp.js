@@ -28,9 +28,6 @@ const otpVerify = async (req, res) => {
 
         if (isEmail) {
             const stored = otpStore[email];
-            console.log('otpStore', otpStore)
-            console.log("stored", stored)
-
             if (!stored) {
                 return res.status(400).json({ message: 'No OTP request found for this email.' });
             }

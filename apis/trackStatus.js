@@ -5,7 +5,6 @@ const schema = require('../models/visitSchema');
 const trackVisitStatus = async (req, res) => {
     try {
         const { id } = req.query;
-        console.log("id: ", id)
         if (!id) {
             return res.status(400).json({ error: 'Property ID is required' });
         }
