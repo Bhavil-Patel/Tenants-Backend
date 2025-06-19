@@ -1,4 +1,4 @@
-## `This is backEnd of chat app `
+## `This is backEnd of tenant's web `
 
 ### `How to setup this backend `
 
